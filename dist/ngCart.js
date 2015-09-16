@@ -33,6 +33,7 @@ angular.module('ngCart', ['ngCart.directives'])
             this.$cart = {
                 shipping : null,
                 taxRate : null,
+                discountRate: null,
                 tax : null,
                 items : []
             };
@@ -64,6 +65,19 @@ angular.module('ngCart', ['ngCart.directives'])
                 }
             });
             return build;
+        };
+
+        this.setDiscountRate = function(discountRate) {
+            this.$cart.discountRate = +parseFloat(discountRate).toFixed(2);
+            return this.getDiscountRate();
+        };
+
+        this.getDiscountRate = function() {
+            return this.$cart.discountRate;
+        };
+
+        this.getDiscount = function(){
+            return +parseFloat(((this.getSubTotal()/100) * this.getCart().discountRate)).toFixed(2);
         };
 
         this.setShipping = function(shipping){
@@ -124,7 +138,7 @@ angular.module('ngCart', ['ngCart.directives'])
         };
 
         this.totalCost = function () {
-            return +parseFloat(this.getSubTotal() + this.getShipping() + this.getTax()).toFixed(2);
+            return +parseFloat(this.getSubTotal() + this.getShipping() + this.getTax() - this.getDiscount()).toFixed(2);
         };
 
         this.removeItem = function (index) {
@@ -147,16 +161,16 @@ angular.module('ngCart', ['ngCart.directives'])
         };
 
         this.empty = function () {
-            
+
             $rootScope.$broadcast('ngCart:change', {});
             this.$cart.items = [];
             localStorage.removeItem('cart');
         };
-        
+
         this.isEmpty = function () {
-            
+
             return (this.$cart.items.length > 0 ? false : true);
-            
+
         };
 
         this.toObject = function() {

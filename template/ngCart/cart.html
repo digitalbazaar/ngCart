@@ -17,6 +17,13 @@
         </tr>
         </thead>
         <tfoot>
+        <tr ng-show="ngCart.getDiscount()">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Discount ({{ ngCart.getDiscountRate() }}%):</td>
+            <td>{{ ngCart.getDiscount() | currency }}</td>
+        </tr>
         <tr ng-show="ngCart.getTax()">
             <td></td>
             <td></td>
